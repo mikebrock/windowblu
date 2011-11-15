@@ -52,8 +52,10 @@ public class BlueBufferManager implements BufferManager {
             }
             switch (buf[++i] = buffer.get()) {
               case '[':
+                bufferSize--;
                 switch (buf[++i] = buffer.get()) {
                   case '2':
+                    bufferSize--;
                     switch (buf[++i] = buffer.get()) {
                       case 'J':
                         // clear screen intercepted
@@ -64,14 +66,12 @@ public class BlueBufferManager implements BufferManager {
                         buf[++i] = '0';
                         buf[++i] = 'H';
                         // offset the buffersize.
-                        bufferSize += 6;
                         break;
                     }
                 }
             }
-
+            bufferSize--;
         }
-        bufferSize--;
       }
       wrappedBuffer.write(buf, 0, i);
     }
