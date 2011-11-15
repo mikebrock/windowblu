@@ -92,7 +92,7 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public int getHeight() {
-    return wrappedBuffer.getHeight();
+    return wrappedBuffer.getHeight() - 1;
   }
 
   @Override
