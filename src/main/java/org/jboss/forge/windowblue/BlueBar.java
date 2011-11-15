@@ -18,7 +18,7 @@ public class BlueBar {
   private static final String HOME = new String(new char[]{27, '[', 'H'});
   private static final String ERASE_TO_END = new String(new char[]{27, '[', 'K'});
 
-  
+
   private byte[] render;
   private int width;
   private final BlueBufferManager manager;
@@ -52,28 +52,29 @@ public class BlueBar {
   }
 
   private static final String FORGE_NAME = "Forge " + Shell.class.getPackage().getImplementationVersion();
-  
+
   public void render() {
     synchronized (manager) {
-      manager.directWrite(SAVE_POS);
-      manager.directWrite(HOME);
-      manager.directWrite(attr(30, 44));
-      
-      StringBuilder sb = new StringBuilder()
-              .append(new Date().toString())
-              .append(" | ")
-              .append(shell.getCurrentDirectory().getFullyQualifiedName())
-              .append(" | ");
+        manager.directWrite(SAVE_POS);
+        manager.directWrite(HOME);
+        manager.directWrite(attr(30, 44));
 
-      manager.directWrite(sb.toString());
+        StringBuilder sb = new StringBuilder()
+                .append(new Date().toString())
+                .append(" | ")
+                .append(shell.getCurrentDirectory().getFullyQualifiedName())
+                .append(" | ");
 
-      int toPad = width - sb.length() - FORGE_NAME.length();
-      manager.directWrite(pad(toPad));
+        manager.directWrite(sb.toString());
 
-      manager.directWrite(attr(1, 37));
-      manager.directWrite(FORGE_NAME);
+        int toPad = width - sb.length() - FORGE_NAME.length();
+        manager.directWrite(pad(toPad));
 
-      manager.directWrite(RES_POS);
+        manager.directWrite(attr(1, 37));
+        manager.directWrite(FORGE_NAME);
+
+        manager.directWrite(RES_POS);
+
     }
   }
 
@@ -134,11 +135,11 @@ public class BlueBar {
     System.out.println(renderCols(parts, new boolean[]{false, false, true}));
 
   }
-  
+
   private String attr(int... code) {
-    return new String(new char[] { 27, '['}) + _attr(code) + "m";
+    return new String(new char[]{27, '['}) + _attr(code) + "m";
   }
-  
+
   private String _attr(int... code) {
     StringBuilder b = new StringBuilder();
     boolean first = true;

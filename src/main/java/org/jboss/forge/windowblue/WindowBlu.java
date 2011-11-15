@@ -45,14 +45,18 @@ public class WindowBlu implements Plugin {
   private Thread updateThread = new Thread() {
     @Override
     public void run() {
-      try {
-        for (; ; ) {
+      for (; ; ) {
+        try {
+          if (!running) return;
           blueBufferManager.render();
           Thread.sleep(1000);
         }
-      }
-      catch (InterruptedException e) {
-        // ignore;
+        catch (InterruptedException e) {
+          // ignore;
+        }
+        catch (IllegalStateException e) {
+          return;
+        }
       }
     }
   };
@@ -60,7 +64,7 @@ public class WindowBlu implements Plugin {
   public void update(@Observes WindowBluUpdate update) {
     blueBufferManager.render();
   }
-  
+
   public void startup(@Observes Shutdown shutdown) {
     running = false;
     updateThread.notify();
