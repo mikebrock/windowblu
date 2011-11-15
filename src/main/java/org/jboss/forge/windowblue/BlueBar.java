@@ -57,8 +57,10 @@ public class BlueBar {
 
     a.a(renderCols(parts, new boolean[] { false, false, true }));
 
-    manager.write(a.restorCursorPosition().toString());
+    manager.write(a.restorCursorPosition().reset().toString());
     manager.flushBuffer();
+
+    System.out.println("**render**");
   }
 
   public static String renderCols(final List<String> list, final boolean[] columns) {
@@ -87,11 +89,10 @@ public class BlueBar {
 
           if (iter.hasNext()) {
             buf.append(" ");
-
           }
         }
         else {
-          buf.append(" ");
+          buf.append(" ").append(el);
           if (iter.hasNext()) {
             buf.append(pad(colSizes[i] - el.length())).append(" ");
           }
@@ -108,5 +109,15 @@ public class BlueBar {
       padding[i] = ' ';
     }
     return new String(padding);
+  }
+
+  public static void main(String[] args) {
+    List<String> parts = new ArrayList<String>();
+    parts.add(new Date().toString());
+    parts.add("JBoss Forge");
+    parts.add("akdsjflkjdaslk/dsajlkfjlaksdjfdsa/");
+
+    System.out.println(renderCols(parts, new boolean[]{false, false, true}));
+
   }
 }
