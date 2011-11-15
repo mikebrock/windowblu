@@ -2,6 +2,7 @@ package org.jboss.forge.windowblue;
 
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
+import org.jboss.forge.shell.events.*;
 import org.jboss.forge.shell.plugins.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 public class WindowBlu implements Plugin {
   private Shell shell;
   private BlueBufferManager blueBufferManager;
+  private boolean running = false;
 
 
   public WindowBlu() {
@@ -35,6 +37,7 @@ public class WindowBlu implements Plugin {
     BufferManager manager = shell.getBufferManager();
     blueBufferManager = new BlueBufferManager(manager, shell);
     shell.registerBufferManager(blueBufferManager);
+    running = true;
     updateThread.setPriority(Thread.MIN_PRIORITY);
     updateThread.start();
   }
@@ -56,6 +59,11 @@ public class WindowBlu implements Plugin {
 
   public void update(@Observes WindowBluUpdate update) {
     blueBufferManager.render();
+  }
+  
+  public void startup(@Observes Shutdown shutdown) {
+    running = false;
+    updateThread.notify();
   }
 
   @DefaultCommand
