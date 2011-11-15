@@ -67,7 +67,7 @@ public class WindowBlu implements Plugin {
 
   public void startup(@Observes Shutdown shutdown) {
     running = false;
-    updateThread.notify();
+    updateThread.interrupt();
   }
 
   @DefaultCommand
