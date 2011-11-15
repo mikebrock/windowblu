@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class BlueBar {
   private static final char FIRST_ESC_CHAR = 27;
-  private static final char SECOND_ESC_CHAR = '['
+  private static final char SECOND_ESC_CHAR = '[';
 
   private byte[] render;
   private int width;
