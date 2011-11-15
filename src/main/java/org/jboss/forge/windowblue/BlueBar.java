@@ -45,18 +45,22 @@ public class BlueBar {
     render();
   }
 
+  private final Object renderLock = new Object();
+
   public void render() {
-    Ansi a = new Ansi().saveCursorPosition().cursor(0, 0).bg(titleBarColor).fg(textColor);
+    synchronized (renderLock){
+      Ansi a = new Ansi().saveCursorPosition().cursor(0, 0).bg(titleBarColor).fg(textColor);
 
-    List<String> parts = new ArrayList<String>();
-    parts.add(new Date().toString());
-    parts.add("JBoss Forge");
-    parts.add(shell.getCurrentDirectory().getFullyQualifiedName());
+      List<String> parts = new ArrayList<String>();
+      parts.add(new Date().toString());
+      parts.add("JBoss Forge");
+      parts.add(shell.getCurrentDirectory().getFullyQualifiedName());
 
-    a.a(renderCols(parts, new boolean[] { false, false, true }));
+      a.a(renderCols(parts, new boolean[]{false, false, true}));
 
-    manager.write(a.reset().restorCursorPosition().toString());
-  //  manager.flushBuffer();
+      manager.write(a.reset().restorCursorPosition().toString());
+    }
+    //  manager.flushBuffer();
   }
 
   public static String renderCols(final List<String> list, final boolean[] columns) {
@@ -95,7 +99,7 @@ public class BlueBar {
         }
       }
     }
-    
+
     return buf.toString();
   }
 
