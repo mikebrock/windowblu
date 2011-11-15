@@ -44,7 +44,7 @@ public class BlueBufferManager implements BufferManager {
       }
       wrappedBuffer.write(buf, 0, i);
     }
-    while (buffer.hasRemaining());
+    while (bufferSize > 0);
 
     bufferSize = 0;
     buffer.clear();
