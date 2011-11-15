@@ -18,6 +18,7 @@ public class BlueBar {
   private static final String HOME = new String(new char[]{27, '[', 'H'});
   private static final String ERASE_TO_END = new String(new char[]{27, '[', 'K'});
 
+  
   private byte[] render;
   private int width;
   private final BlueBufferManager manager;
@@ -56,9 +57,6 @@ public class BlueBar {
     synchronized (manager) {
       manager.directWrite(SAVE_POS);
       manager.directWrite(HOME);
-
-      Ansi a = new Ansi().bg(titleBarColor).fg(textColor);
-
       
       StringBuilder sb = new StringBuilder()
               .append(new Date().toString())
@@ -67,20 +65,12 @@ public class BlueBar {
               .append(" | ");
 
       manager.directWrite(sb.toString());
-      //manager.directWrite(ERASE_TO_END);
 
       int toPad = width - sb.length() - FORGE_NAME.length();
       manager.directWrite(pad(toPad));
+
+      manager.directWrite(attr(37, 1));
       manager.directWrite(FORGE_NAME);
-
-      List<String> parts = new ArrayList<String>();
-      parts.add(new Date().toString());
-      parts.add("JBoss Forge");
-      parts.add(shell.getCurrentDirectory().getFullyQualifiedName());
-
-      a.a(renderCols(parts, new boolean[]{false, false, true}));
-
-      manager.directWrite(a.toString());
 
       manager.directWrite(RES_POS);
     }
@@ -143,5 +133,21 @@ public class BlueBar {
     System.out.println(renderCols(parts, new boolean[]{false, false, true}));
 
   }
-
+  
+  private String attr(int... code) {
+    return new String(new char[] { 27, '['}) + _attr(code) + "m";
+  }
+  
+  private String _attr(int... code) {
+    StringBuilder b = new StringBuilder();
+    boolean first = true;
+    for (int c : code) {
+      if (!first) {
+        b.append(';');
+      }
+      first = false;
+      b.append(c);
+    }
+    return b.toString();
+  }
 }
