@@ -45,7 +45,7 @@ public class BlueBufferManager implements BufferManager {
         switch (buf[i] = buffer.get()) {
           // intercept escape code
           case 27:
-            if (i + 4 >= buf.length) {
+            if (i + 10 >= buf.length) {
               buffer.position(buffer.position() - 1);
               i--;
               break Inner;
@@ -57,8 +57,12 @@ public class BlueBufferManager implements BufferManager {
                     switch (buf[++i] = buffer.get()) {
                       case 'J':
                         // clear screen intercepted
-                        buf[++i] = '\r';
-                        buf[++i] = '\n';
+                        buf[++i] = 27;
+                        buf[++i] = '[';
+                        buf[++i] = '1';
+                        buf[++i] = ';';
+                        buf[++i] = '0';
+                        buf[++i] = 'f';
                         break;
                     }
                 }
