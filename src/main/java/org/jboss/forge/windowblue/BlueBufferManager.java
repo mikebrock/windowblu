@@ -1,6 +1,5 @@
 package org.jboss.forge.windowblue;
 
-import com.sun.org.apache.bcel.internal.classfile.InnerClass;
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 
@@ -16,10 +15,11 @@ public class BlueBufferManager implements BufferManager {
   private boolean bufferOnly = false;
   private ByteBuffer buffer;
   private int bufferSize = 0;
+  private int maxBufferSize = 1024 * 10;
 
   public BlueBufferManager(BufferManager wrappedBuffer, Shell shell) {
     this.wrappedBuffer = wrappedBuffer;
-    this.buffer = ByteBuffer.allocateDirect(wrappedBuffer.getHeight() * wrappedBuffer.getWidth() * 4);
+    this.buffer = ByteBuffer.allocateDirect(maxBufferSize);
     this.blueBar = new BlueBar(this, shell);
   }
 
@@ -52,10 +52,8 @@ public class BlueBufferManager implements BufferManager {
             }
             switch (buf[++i] = buffer.get()) {
               case '[':
-                bufferSize--;
                 switch (buf[++i] = buffer.get()) {
                   case '2':
-                    bufferSize--;
                     switch (buf[++i] = buffer.get()) {
                       case 'J':
                         // clear screen intercepted
@@ -90,6 +88,8 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte b) {
+    if (bufferSize + 1 >= maxBufferSize) flushBuffer();
+
     buffer.put(b);
     bufferSize++;
     _flush();
@@ -97,6 +97,8 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte[] b) {
+    if (bufferSize + b.length >= maxBufferSize) flushBuffer();
+
     buffer.put(b);
     bufferSize += b.length;
     _flush();
@@ -104,6 +106,8 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte[] b, int offset, int length) {
+    if (bufferSize + length >= maxBufferSize) flushBuffer();
+
     buffer.put(b, offset, length);
     bufferSize += length;
     _flush();
