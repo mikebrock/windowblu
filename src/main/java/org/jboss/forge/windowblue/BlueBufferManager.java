@@ -34,6 +34,7 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void flushBuffer() {
+    wrappedBuffer.bufferOnlyMode();
     byte[] buf = new byte[1024];
     buffer.rewind();
     do {
@@ -43,12 +44,14 @@ public class BlueBufferManager implements BufferManager {
         bufferSize--;
       }
       wrappedBuffer.write(buf, 0, i);
-      blueBar.render();
     }
     while (bufferSize > 0);
 
     bufferSize = 0;
     buffer.clear();
+    wrappedBuffer.flushBuffer();
+    wrappedBuffer.directWriteMode();
+    blueBar.render();
   }
 
   private void _flush() {
