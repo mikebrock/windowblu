@@ -56,7 +56,7 @@ public class BlueBar {
     a.a(renderCols(parts, new boolean[] { false, false, true }));
 
     manager.write(a.reset().restorCursorPosition().toString());
-    manager.flushBuffer();
+  //  manager.flushBuffer();
   }
 
   public static String renderCols(final List<String> list, final boolean[] columns) {
