@@ -60,6 +60,8 @@ public class BlueBar {
 
       manager.write(a.reset().restorCursorPosition().toString());
     }
+
+    manager.write("-updated-");
     //  manager.flushBuffer();
   }
 
