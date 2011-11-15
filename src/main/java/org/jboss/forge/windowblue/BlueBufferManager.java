@@ -57,8 +57,8 @@ public class BlueBufferManager implements BufferManager {
                     switch (buf[++i] = buffer.get()) {
                       case 'J':
                         // clear screen intercepted
+                        buf[++i] = '\r';
                         buf[++i] = '\n';
-                        System.out.print("");
                         break;
                     }
                 }
