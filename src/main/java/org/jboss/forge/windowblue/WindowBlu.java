@@ -4,6 +4,7 @@ import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 import org.jboss.forge.shell.plugins.*;
 
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 /**
@@ -47,8 +48,14 @@ public class WindowBlu implements Plugin {
     }
   };
 
+  public void update(@Observes WindowBluUpdate update)  {
+    blueBufferManager.render();
+  }
+
   @DefaultCommand
   public void windowblu(PipeOut out) {
     out.println("WindowBlu by Mike Brock");
   }
+
+
 }
