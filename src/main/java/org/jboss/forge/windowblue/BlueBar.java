@@ -13,8 +13,8 @@ import java.util.List;
  * @author Mike Brock
  */
 public class BlueBar {
-  private static final char FIRST_ESC_CHAR = 27;
-  private static final char SECOND_ESC_CHAR = '[';
+  private static final String SAVE_POS = new String(new char[] { 7, '7' });
+  private static final String RES_POS = new String(new char[] { 7, '8' });
 
   private byte[] render;
   private int width;
@@ -50,7 +50,7 @@ public class BlueBar {
 
   public void render() {
     synchronized (manager) {
-      manager.directWrite(getEscape('7'));
+      manager.directWrite(SAVE_POS);
 
       Ansi a = new Ansi().bg(titleBarColor).fg(textColor);
 
@@ -63,7 +63,7 @@ public class BlueBar {
 
       manager.directWrite(a.toString());
 
-      manager.directWrite(getEscape('8'));
+      manager.directWrite(RES_POS);
     }
 
     //  manager.flushBuffer();
@@ -127,7 +127,4 @@ public class BlueBar {
 
   }
 
-  private String getEscape(char command) {
- 		return new StringBuilder().append(FIRST_ESC_CHAR).append(SECOND_ESC_CHAR).append(command).toString();
- 	}
 }
