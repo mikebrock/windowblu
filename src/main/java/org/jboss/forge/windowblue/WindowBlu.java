@@ -16,8 +16,12 @@ import javax.inject.Inject;
 @Alias("windowblu")
 @Help("A Forge Plugin.")
 public class WindowBlu implements Plugin {
-  private final Shell shell;
+  private Shell shell;
   private BlueBufferManager blueBufferManager;
+
+
+  public WindowBlu() {
+  }
 
   @Inject
   public WindowBlu(final Shell shell) {
