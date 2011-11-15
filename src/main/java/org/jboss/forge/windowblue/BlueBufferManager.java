@@ -43,6 +43,7 @@ public class BlueBufferManager implements BufferManager {
         bufferSize--;
       }
       wrappedBuffer.write(buf, 0, i);
+      blueBar.render();
     }
     while (bufferSize > 0);
 
