@@ -31,8 +31,6 @@ public class WindowBlu implements Plugin {
     shell.registerBufferManager(blueBufferManager);
     updateThread.setPriority(Thread.MIN_PRIORITY);
     updateThread.start();
-
-    System.out.println("WindowBlu loaded");
   }
 
   private Thread updateThread = new Thread() {
