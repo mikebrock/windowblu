@@ -42,40 +42,45 @@ public class BlueBufferManager implements BufferManager {
       int i = 0;
       Inner:
       for (; i < buf.length && bufferSize > 0; i++) {
+        bufferSize--;
         switch (buf[i] = buffer.get()) {
           // intercept escape code
           case 27:
             if (i + 20 >= buf.length) {
               buffer.position(buffer.position() - 1);
+              bufferSize++;
               i--;
               break Inner;
             }
-            switch (buf[++i] = buffer.get()) {
-              case '[':
-                if (bufferSize > 0) {
-                  bufferSize--;
-                  switch (buf[++i] = buffer.get()) {
-                    case '2':
-                      if (bufferSize > 0) {
-                        bufferSize--;
-                        switch (buf[++i] = buffer.get()) {
-                          case 'J':
-                            // clear screen intercepted
-                            buf[++i] = 27;
-                            buf[++i] = '[';
-                            buf[++i] = '2';
-                            buf[++i] = ';';
-                            buf[++i] = '0';
-                            buf[++i] = 'H';
-                            // offset the buffersize.
-                            break;
-                        }
+            if (bufferSize > 0) {
+              bufferSize--;
+              switch (buf[++i] = buffer.get()) {
+                case '[':
+                  if (bufferSize > 0) {
+                    bufferSize--;
+                    switch (buf[++i] = buffer.get()) {
+                      case '2':
+                        if (bufferSize > 0) {
+                          bufferSize--;
+                          switch (buf[++i] = buffer.get()) {
+                            case 'J':
+                              // clear screen intercepted
+                              buf[++i] = 27;
+                              buf[++i] = '[';
+                              buf[++i] = '2';
+                              buf[++i] = ';';
+                              buf[++i] = '0';
+                              buf[++i] = 'H';
+                              // offset the buffersize.
+                              break;
+                          }
 
-                      }
+                        }
+                    }
                   }
-                }
+              }
             }
-            bufferSize--;
+
         }
       }
       wrappedBuffer.write(buf, 0, i);
@@ -84,6 +89,7 @@ public class BlueBufferManager implements BufferManager {
 
     bufferSize = 0;
     buffer.clear();
+
     wrappedBuffer.flushBuffer();
     wrappedBuffer.directWriteMode();
     blueBar.render();
