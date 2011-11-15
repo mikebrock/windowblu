@@ -58,7 +58,7 @@ public class BlueBar {
 
       a.a(renderCols(parts, new boolean[]{false, false, true}));
 
-      manager.directWrite(a.reset().restorCursorPosition().toString());
+      manager.directWrite(a.restorCursorPosition().toString());
     }
 
     //  manager.flushBuffer();
