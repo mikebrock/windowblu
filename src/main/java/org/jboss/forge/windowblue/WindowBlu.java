@@ -18,7 +18,7 @@ public class WindowBlu implements Plugin {
   private BlueBufferManager blueBufferManager;
 
   @Inject
-  public WindowBlu(Shell shell) {
+  public WindowBlu(final Shell shell) {
     this.shell = shell;
     init();
   }
