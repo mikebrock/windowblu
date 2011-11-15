@@ -39,8 +39,10 @@ public class WindowBlu implements Plugin {
     @Override
     public void run() {
       try {
-        blueBufferManager.render();
-        Thread.sleep(1000);
+        for (; ; ) {
+          blueBufferManager.render();
+          Thread.sleep(1000);
+        }
       }
       catch (InterruptedException e) {
         // ignore;
@@ -48,7 +50,7 @@ public class WindowBlu implements Plugin {
     }
   };
 
-  public void update(@Observes WindowBluUpdate update)  {
+  public void update(@Observes WindowBluUpdate update) {
     blueBufferManager.render();
   }
 

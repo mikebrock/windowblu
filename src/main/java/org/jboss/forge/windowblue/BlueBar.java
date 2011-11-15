@@ -1,10 +1,8 @@
 package org.jboss.forge.windowblue;
 
-import com.sun.org.apache.xerces.internal.impl.dv.xs.AnySimpleDV;
 import org.fusesource.jansi.Ansi;
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
-import org.jboss.forge.shell.ShellPrintWriter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +31,7 @@ public class BlueBar {
 
   private void loadDefaults() {
     titleBarColor = Ansi.Color.BLUE;
-    textColor = Ansi.Color.WHITE;
+    textColor = Ansi.Color.BLACK;
   }
 
   private void _checkWidth() {
