@@ -59,6 +59,7 @@ public class BlueBar {
       a.a(renderCols(parts, new boolean[]{false, false, true}));
 
       manager.write(a.reset().restorCursorPosition().toString());
+      manager.flushBuffer();
     }
 
     manager.write("-updated-");
