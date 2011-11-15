@@ -13,9 +13,10 @@ import java.util.List;
  * @author Mike Brock
  */
 public class BlueBar {
-  private static final String SAVE_POS = new String(new char[] { 27, '7' });
-  private static final String RES_POS = new String(new char[] { 27, '8' });
-  private static final String HOME = new String(new char[] { 27, '[', 'H'});
+  private static final String SAVE_POS = new String(new char[]{27, '7'});
+  private static final String RES_POS = new String(new char[]{27, '8'});
+  private static final String HOME = new String(new char[]{27, '[', 'H'});
+  private static final String ERASE_TO_END = new String(new char[]{27, '[', 'K'});
 
   private byte[] render;
   private int width;
@@ -49,12 +50,28 @@ public class BlueBar {
     render();
   }
 
+  private static final String FORGE_NAME = "Forge " + Shell.class.getPackage().getImplementationVersion();
+  
   public void render() {
     synchronized (manager) {
       manager.directWrite(SAVE_POS);
       manager.directWrite(HOME);
 
       Ansi a = new Ansi().bg(titleBarColor).fg(textColor);
+
+      
+      StringBuilder sb = new StringBuilder()
+              .append(new Date().toString())
+              .append(" | ")
+              .append(shell.getCurrentDirectory().getFullyQualifiedName())
+              .append(" | ");
+
+      manager.directWrite(sb.toString());
+      //manager.directWrite(ERASE_TO_END);
+
+      int toPad = width - sb.length() - FORGE_NAME.length();
+      manager.directWrite(pad(toPad));
+      manager.directWrite(FORGE_NAME);
 
       List<String> parts = new ArrayList<String>();
       parts.add(new Date().toString());
@@ -67,8 +84,6 @@ public class BlueBar {
 
       manager.directWrite(RES_POS);
     }
-
-    //  manager.flushBuffer();
   }
 
   public static String renderCols(final List<String> list, final boolean[] columns) {
