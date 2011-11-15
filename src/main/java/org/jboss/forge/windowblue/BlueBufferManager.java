@@ -58,14 +58,12 @@ public class BlueBufferManager implements BufferManager {
                       case 'J':
                         // clear screen intercepted
                         buf[++i] = '\n';
-                        buf[++i] = '\n';
-//                        buf[++i] = 27;
-//                        buf[++i] = '[';
-//                        buf[++i] = 'H';
-//                        buf[++i] = 27;
-//                        buf[++i] = '[';
-//                        buf[++i] = '1';
-//                        buf[++i] = 'B';
+                        buf[++i] = 27;
+                        buf[++i] = '[';
+                        buf[++i] = '2';
+                        buf[++i] = ';';
+                        buf[++i] = '0';
+                        buf[++i] = 'H';
                         break;
                     }
                 }
