@@ -28,6 +28,7 @@ public class BlueBar {
     this.shell = shell;
     this.width = manager.getWidth();
     this.render = new byte[width];
+    loadDefaults();
   }
 
   private void loadDefaults() {
