@@ -52,20 +52,27 @@ public class BlueBufferManager implements BufferManager {
             }
             switch (buf[++i] = buffer.get()) {
               case '[':
-                switch (buf[++i] = buffer.get()) {
-                  case '2':
-                    switch (buf[++i] = buffer.get()) {
-                      case 'J':
-                        // clear screen intercepted
-                        buf[++i] = 27;
-                        buf[++i] = '[';
-                        buf[++i] = '2';
-                        buf[++i] = ';';
-                        buf[++i] = '0';
-                        buf[++i] = 'H';
-                        // offset the buffersize.
-                        break;
-                    }
+                if (bufferSize > 0) {
+                  bufferSize--;
+                  switch (buf[++i] = buffer.get()) {
+                    case '2':
+                      if (bufferSize > 0) {
+                        bufferSize--;
+                        switch (buf[++i] = buffer.get()) {
+                          case 'J':
+                            // clear screen intercepted
+                            buf[++i] = 27;
+                            buf[++i] = '[';
+                            buf[++i] = '2';
+                            buf[++i] = ';';
+                            buf[++i] = '0';
+                            buf[++i] = 'H';
+                            // offset the buffersize.
+                            break;
+                        }
+
+                      }
+                  }
                 }
             }
             bufferSize--;
