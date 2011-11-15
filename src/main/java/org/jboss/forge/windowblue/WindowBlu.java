@@ -2,10 +2,7 @@ package org.jboss.forge.windowblue;
 
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
-import org.jboss.forge.shell.plugins.Alias;
-import org.jboss.forge.shell.plugins.Help;
-import org.jboss.forge.shell.plugins.Plugin;
-import org.jboss.forge.shell.plugins.Topic;
+import org.jboss.forge.shell.plugins.*;
 
 import javax.inject.Inject;
 
@@ -49,4 +46,9 @@ public class WindowBlu implements Plugin {
       }
     }
   };
+
+  @DefaultCommand
+  public void windowblu(PipeOut out) {
+    out.println("WindowBlu by Mike Brock");
+  }
 }
