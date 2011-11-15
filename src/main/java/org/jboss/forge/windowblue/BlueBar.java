@@ -57,6 +57,7 @@ public class BlueBar {
     synchronized (manager) {
       manager.directWrite(SAVE_POS);
       manager.directWrite(HOME);
+      manager.directWrite(attr(30, 44));
       
       StringBuilder sb = new StringBuilder()
               .append(new Date().toString())
@@ -69,7 +70,7 @@ public class BlueBar {
       int toPad = width - sb.length() - FORGE_NAME.length();
       manager.directWrite(pad(toPad));
 
-      manager.directWrite(attr(37, 1));
+      manager.directWrite(attr(1, 37));
       manager.directWrite(FORGE_NAME);
 
       manager.directWrite(RES_POS);
