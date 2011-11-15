@@ -11,16 +11,15 @@ import java.nio.ByteBuffer;
 public class BlueBufferManager implements BufferManager {
   private BlueBar blueBar;
   private BufferManager wrappedBuffer;
-  private Shell shell;
+
   private boolean bufferOnly = false;
   private ByteBuffer buffer;
-  
+
   public BlueBufferManager(BufferManager wrappedBuffer, Shell shell) {
     this.wrappedBuffer = wrappedBuffer;
     this.buffer = ByteBuffer.allocateDirect(wrappedBuffer.getHeight() * wrappedBuffer.getWidth() * 2);
     this.blueBar = new BlueBar(this, shell);
   }
-
 
   @Override
   public void bufferOnlyMode() {
@@ -51,21 +50,21 @@ public class BlueBufferManager implements BufferManager {
   private void _flush() {
     if (!bufferOnly) flushBuffer();
   }
-  
+
   @Override
-  public void write(byte b) {
+  public synchronized void write(byte b) {
     buffer.put(b);
     _flush();
   }
 
   @Override
-  public void write(byte[] b) {
+  public synchronized void write(byte[] b) {
     buffer.put(b);
     _flush();
   }
 
   @Override
-  public void write(byte[] b, int offset, int length) {
+  public synchronized void write(byte[] b, int offset, int length) {
     buffer.put(b, offset, length);
     _flush();
   }
@@ -74,7 +73,7 @@ public class BlueBufferManager implements BufferManager {
   public void write(String s) {
     write(s.getBytes());
   }
-  
+
   public synchronized void directWrite(String s) {
     wrappedBuffer.write(s);
   }
