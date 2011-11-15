@@ -47,7 +47,7 @@ public class BlueBufferManager implements BufferManager {
 
     buffer.clear();
   }
-
+  
   @Override
   public void write(byte b) {
     buffer.put(b);
@@ -66,6 +66,10 @@ public class BlueBufferManager implements BufferManager {
   @Override
   public void write(String s) {
     write(s.getBytes());
+  }
+  
+  public void directWrite(String s) {
+    wrappedBuffer.write(s);
   }
 
   @Override

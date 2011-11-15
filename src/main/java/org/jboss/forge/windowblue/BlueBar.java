@@ -15,13 +15,13 @@ import java.util.List;
 public class BlueBar {
   private byte[] render;
   private int width;
-  private BufferManager manager;
+  private BlueBufferManager manager;
   private Shell shell;
 
   private Ansi.Color titleBarColor;
   private Ansi.Color textColor;
 
-  public BlueBar(BufferManager manager, Shell shell) {
+  public BlueBar(BlueBufferManager manager, Shell shell) {
     this.manager = manager;
     this.shell = shell;
     this.width = manager.getWidth();
@@ -58,11 +58,9 @@ public class BlueBar {
 
       a.a(renderCols(parts, new boolean[]{false, false, true}));
 
-      manager.write(a.reset().restorCursorPosition().toString());
-      manager.flushBuffer();
+      manager.directWrite(a.reset().restorCursorPosition().toString());
     }
 
-    manager.write("-updated-");
     //  manager.flushBuffer();
   }
 
