@@ -45,7 +45,7 @@ public class BlueBufferManager implements BufferManager {
         switch (buf[i] = buffer.get()) {
           // intercept escape code
           case 27:
-            if (i + 10 >= buf.length) {
+            if (i + 20 >= buf.length) {
               buffer.position(buffer.position() - 1);
               i--;
               break Inner;
