@@ -15,6 +15,7 @@ import java.util.List;
 public class BlueBar {
   private static final String SAVE_POS = new String(new char[] { 7, '7' });
   private static final String RES_POS = new String(new char[] { 7, '8' });
+  private static final String HOME = new String(new char[] { 7, '[', 'H'});
 
   private byte[] render;
   private int width;
@@ -51,6 +52,7 @@ public class BlueBar {
   public void render() {
     synchronized (manager) {
       manager.directWrite(SAVE_POS);
+      manager.directWrite(HOME);
 
       Ansi a = new Ansi().bg(titleBarColor).fg(textColor);
 
