@@ -63,6 +63,8 @@ public class BlueBufferManager implements BufferManager {
                         buf[++i] = ';';
                         buf[++i] = '0';
                         buf[++i] = 'H';
+                        // offset the buffersize.
+                        bufferSize += 6;
                         break;
                     }
                 }
