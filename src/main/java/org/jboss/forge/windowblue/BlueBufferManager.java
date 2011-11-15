@@ -14,10 +14,11 @@ public class BlueBufferManager implements BufferManager {
 
   private boolean bufferOnly = false;
   private ByteBuffer buffer;
+  private int bufferSize = 0;
 
   public BlueBufferManager(BufferManager wrappedBuffer, Shell shell) {
     this.wrappedBuffer = wrappedBuffer;
-    this.buffer = ByteBuffer.allocateDirect(wrappedBuffer.getHeight() * wrappedBuffer.getWidth() * 2);
+    this.buffer = ByteBuffer.allocateDirect(wrappedBuffer.getHeight() * wrappedBuffer.getWidth() * 4);
     this.blueBar = new BlueBar(this, shell);
   }
 
@@ -37,13 +38,15 @@ public class BlueBufferManager implements BufferManager {
     buffer.rewind();
     do {
       int i = 0;
-      for (; i < buf.length && buffer.hasRemaining(); i++) {
+      for (; i < buf.length && bufferSize > 0; i++) {
         buf[i] = buffer.get();
+        bufferSize--;
       }
       wrappedBuffer.write(buf, 0, i);
     }
     while (buffer.hasRemaining());
 
+    bufferSize = 0;
     buffer.clear();
   }
 
@@ -54,18 +57,21 @@ public class BlueBufferManager implements BufferManager {
   @Override
   public synchronized void write(byte b) {
     buffer.put(b);
+    bufferSize++;
     _flush();
   }
 
   @Override
   public synchronized void write(byte[] b) {
     buffer.put(b);
+    bufferSize += b.length;
     _flush();
   }
 
   @Override
   public synchronized void write(byte[] b, int offset, int length) {
     buffer.put(b, offset, length);
+    bufferSize += length;
     _flush();
   }
 
