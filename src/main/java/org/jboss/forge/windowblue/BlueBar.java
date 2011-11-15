@@ -13,9 +13,9 @@ import java.util.List;
  * @author Mike Brock
  */
 public class BlueBar {
-  private static final String SAVE_POS = new String(new char[] { 7, '7' });
-  private static final String RES_POS = new String(new char[] { 7, '8' });
-  private static final String HOME = new String(new char[] { 7, '[', 'H'});
+  private static final String SAVE_POS = new String(new char[] { 27, '7' });
+  private static final String RES_POS = new String(new char[] { 27, '8' });
+  private static final String HOME = new String(new char[] { 27, '[', 'H'});
 
   private byte[] render;
   private int width;
