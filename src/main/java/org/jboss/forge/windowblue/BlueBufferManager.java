@@ -33,7 +33,7 @@ public class BlueBufferManager implements BufferManager {
   }
 
   @Override
-  public void flushBuffer() {
+  public synchronized void flushBuffer() {
     byte[] buf = new byte[1024];
     buffer.rewind();
     do {
@@ -68,7 +68,7 @@ public class BlueBufferManager implements BufferManager {
     write(s.getBytes());
   }
   
-  public void directWrite(String s) {
+  public synchronized void directWrite(String s) {
     wrappedBuffer.write(s);
   }
 

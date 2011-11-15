@@ -13,9 +13,12 @@ import java.util.List;
  * @author Mike Brock
  */
 public class BlueBar {
+  private static final char FIRST_ESC_CHAR = 27;
+  private static final char SECOND_ESC_CHAR = '['
+
   private byte[] render;
   private int width;
-  private BlueBufferManager manager;
+  private final BlueBufferManager manager;
   private Shell shell;
 
   private Ansi.Color titleBarColor;
@@ -45,11 +48,11 @@ public class BlueBar {
     render();
   }
 
-  private final Object renderLock = new Object();
-
   public void render() {
-    synchronized (renderLock){
-      Ansi a = new Ansi().saveCursorPosition().cursor(0, 0).bg(titleBarColor).fg(textColor);
+    synchronized (manager) {
+      manager.directWrite(getEscape('7'));
+
+      Ansi a = new Ansi().bg(titleBarColor).fg(textColor);
 
       List<String> parts = new ArrayList<String>();
       parts.add(new Date().toString());
@@ -58,7 +61,9 @@ public class BlueBar {
 
       a.a(renderCols(parts, new boolean[]{false, false, true}));
 
-      manager.directWrite(a.restorCursorPosition().toString());
+      manager.directWrite(a.toString());
+
+      manager.directWrite(getEscape('8'));
     }
 
     //  manager.flushBuffer();
@@ -121,4 +126,8 @@ public class BlueBar {
     System.out.println(renderCols(parts, new boolean[]{false, false, true}));
 
   }
+
+  private String getEscape(char command) {
+ 		return new StringBuilder().append(FIRST_ESC_CHAR).append(SECOND_ESC_CHAR).append(command).toString();
+ 	}
 }
