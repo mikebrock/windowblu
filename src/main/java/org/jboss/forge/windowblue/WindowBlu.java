@@ -7,20 +7,14 @@ import org.jboss.forge.shell.plugins.Help;
 import org.jboss.forge.shell.plugins.Plugin;
 import org.jboss.forge.shell.plugins.Topic;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import java.util.Set;
 
 /**
  * @author Mike Brock
  */
-@Topic("Project")
-@Alias("generate-entities")
-@Help("Generate entities from a database.")
+@Topic("Shell Environment")
+@Alias("windowblu")
+@Help("A Forge Plugin.")
 public class WindowBlu implements Plugin {
   private final Shell shell;
   private BlueBufferManager blueBufferManager;
