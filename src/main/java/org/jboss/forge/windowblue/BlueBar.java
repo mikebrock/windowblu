@@ -55,25 +55,27 @@ public class BlueBar {
 
   public void render() {
     synchronized (manager) {
-        manager.directWrite(SAVE_POS);
-        manager.directWrite(HOME);
-        manager.directWrite(attr(30, 44));
+      this.width = manager.getWidth();
 
-        StringBuilder sb = new StringBuilder()
-                .append(new Date().toString())
-                .append(" | ")
-                .append(shell.getCurrentDirectory().getFullyQualifiedName())
-                .append(" | ");
+      manager.directWrite(SAVE_POS);
+      manager.directWrite(HOME);
+      manager.directWrite(attr(30, 44));
 
-        manager.directWrite(sb.toString());
+      StringBuilder sb = new StringBuilder()
+              .append(new Date().toString())
+              .append(" | ")
+              .append(shell.getCurrentDirectory().getFullyQualifiedName())
+              .append(" | ");
 
-        int toPad = width - sb.length() - FORGE_NAME.length();
-        manager.directWrite(pad(toPad));
+      manager.directWrite(sb.toString());
 
-        manager.directWrite(attr(1, 37));
-        manager.directWrite(FORGE_NAME);
+      int toPad = width - sb.length() - FORGE_NAME.length();
+      manager.directWrite(pad(toPad));
 
-        manager.directWrite(RES_POS);
+      manager.directWrite(attr(1, 37));
+      manager.directWrite(FORGE_NAME);
+
+      manager.directWrite(RES_POS);
 
     }
   }
