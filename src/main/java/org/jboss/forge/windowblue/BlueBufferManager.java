@@ -47,20 +47,27 @@ public class BlueBufferManager implements BufferManager {
 
     buffer.clear();
   }
+
+  private void _flush() {
+    if (!bufferOnly) flushBuffer();
+  }
   
   @Override
   public void write(byte b) {
     buffer.put(b);
+    _flush();
   }
 
   @Override
   public void write(byte[] b) {
     buffer.put(b);
+    _flush();
   }
 
   @Override
   public void write(byte[] b, int offset, int length) {
     buffer.put(b, offset, length);
+    _flush();
   }
 
   @Override
