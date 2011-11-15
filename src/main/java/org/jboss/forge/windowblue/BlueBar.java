@@ -55,7 +55,7 @@ public class BlueBar {
     parts.add("JBoss Forge");
     parts.add(shell.getCurrentDirectory().getFullyQualifiedName());
 
-    a.a(renderCols(parts, new boolean[] { false, false }));
+    a.a(renderCols(parts, new boolean[] { false, false, true }));
 
     manager.write(a.restorCursorPosition().toString());
     manager.flushBuffer();
