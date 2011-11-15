@@ -4,12 +4,14 @@ import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 import org.jboss.forge.shell.plugins.*;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 /**
  * @author Mike Brock
  */
+@ApplicationScoped
 @Topic("Shell Environment")
 @Alias("windowblu")
 @Help("A Forge Plugin.")
