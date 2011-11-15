@@ -1,5 +1,6 @@
 package org.jboss.forge.windowblue;
 
+import com.sun.org.apache.bcel.internal.classfile.InnerClass;
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 
@@ -35,12 +36,34 @@ public class BlueBufferManager implements BufferManager {
   @Override
   public synchronized void flushBuffer() {
     wrappedBuffer.bufferOnlyMode();
-    byte[] buf = new byte[1024];
+    byte[] buf = new byte[2048];
     buffer.rewind();
     do {
       int i = 0;
+      Inner:
       for (; i < buf.length && bufferSize > 0; i++) {
-        buf[i] = buffer.get();
+        switch (buf[i] = buffer.get()) {
+          // intercept escape code
+          case 27:
+            if (i + 4 >= buf.length) {
+              buffer.position(buffer.position() - 1);
+              i--;
+              break Inner;
+            }
+            switch (buf[++i] = buffer.get()) {
+              case '[':
+                switch (buf[++i] = buffer.get()) {
+                  case '2':
+                    switch (buf[++i] = buffer.get()) {
+                      case 'J':
+                        // clear screen intercepted
+                        buf[++i] = '\n';
+                    }
+
+                }
+            }
+
+        }
         bufferSize--;
       }
       wrappedBuffer.write(buf, 0, i);
