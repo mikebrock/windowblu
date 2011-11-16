@@ -4,6 +4,7 @@ import org.fusesource.jansi.Ansi;
 import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -37,33 +38,32 @@ public class BlueBar {
     textColor = Ansi.Color.BLACK;
   }
 
-  private void resize() {
-    render();
-  }
 
   private static final String FORGE_NAME = "Forge " + Shell.class.getPackage().getImplementationVersion();
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d yyyy kk:mm");
 
-  public void render() {
+  public String render() {
     synchronized (manager) {
       this.width = manager.getWidth();
 
-      manager.directWrite(SAVE_POS);
-      manager.directWrite(HOME);
-      manager.directWrite(attr(30, 44));
+      StringBuilder buf = new StringBuilder(SAVE_POS)
+              .append(SAVE_POS)
+              .append(HOME)
+              .append(attr(30, 44));
 
-      StringBuilder sb = new StringBuilder()
-              .append(new Date().toString())
-              .append(" | ")
-              .append(shell.getCurrentDirectory().getFullyQualifiedName())
-              .append(" | ");
+      StringBuilder contents = new StringBuilder(DATE_FORMAT.format(new Date()))
+                    .append(" | ")
+                    .append(shell.getCurrentDirectory().getFullyQualifiedName())
+                    .append(" | ");
 
-      manager.directWrite(sb.toString());
+      buf.append(contents);
 
-      int toPad = width - sb.length() - FORGE_NAME.length();
-      manager.directWrite(pad(toPad));
-      manager.directWrite(attr(1, 37));
-      manager.directWrite(FORGE_NAME);
-      manager.directWrite(RES_POS);
+      int toPad = width - contents.length() - FORGE_NAME.length();
+
+      return buf.append(pad(toPad))
+              .append(attr(1, 37))
+              .append(FORGE_NAME)
+              .append(RES_POS).toString();
     }
   }
 

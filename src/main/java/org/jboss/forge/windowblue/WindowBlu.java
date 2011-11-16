@@ -8,6 +8,7 @@ import org.jboss.forge.shell.plugins.*;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import java.util.Calendar;
 
 /**
  * @author Mike Brock
@@ -49,7 +50,7 @@ public class WindowBlu implements Plugin {
         try {
           if (!running) return;
           blueBufferManager.render();
-          Thread.sleep(1000);
+          Thread.sleep(calculateSleep());
         }
         catch (InterruptedException e) {
           // ignore;
@@ -60,6 +61,23 @@ public class WindowBlu implements Plugin {
       }
     }
   };
+
+  private boolean initial = true;
+  private long calculateSleep() {
+    if (initial) {
+      initial = false;
+      Calendar c = Calendar.getInstance();
+      c.add(Calendar.MINUTE, 1);      
+      c.set(Calendar.SECOND, 0);
+      c.set(Calendar.MILLISECOND, 0);
+      
+      return c.getTimeInMillis() - System.currentTimeMillis();
+    }
+    else {
+      return 60000;
+    }
+  }
+  
 
   public void update(@Observes WindowBluUpdate update) {
     blueBufferManager.render();

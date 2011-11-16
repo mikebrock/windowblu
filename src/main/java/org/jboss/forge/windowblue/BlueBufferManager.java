@@ -36,6 +36,8 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void flushBuffer() {
+    String render = blueBar.render();
+    wrappedBuffer.write(render);
     wrappedBuffer.bufferOnlyMode();
     byte[] buf = new byte[2048];
     buffer.rewind();
@@ -78,6 +80,7 @@ public class BlueBufferManager implements BufferManager {
                         }
                     }
                   }
+
               }
             }
 
@@ -89,8 +92,8 @@ public class BlueBufferManager implements BufferManager {
 
     bufferSize = 0;
     buffer.clear();
-    blueBar.render();
 
+    wrappedBuffer.write(render);
     wrappedBuffer.directWriteMode();
   }
 
@@ -100,7 +103,9 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte b) {
-    if (bufferSize + 1 >= maxBufferSize) flushBuffer();
+    if (bufferSize + 1 >= maxBufferSize) {
+      flushBuffer();
+    }
 
     buffer.put(b);
     bufferSize++;
@@ -109,7 +114,10 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte[] b) {
-    if (bufferSize + b.length >= maxBufferSize) flushBuffer();
+    if (bufferSize + b.length >= maxBufferSize) {
+      flushBuffer();
+      write(b);
+    }
 
     buffer.put(b);
     bufferSize += b.length;
@@ -118,7 +126,10 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void write(byte[] b, int offset, int length) {
-    if (bufferSize + length >= maxBufferSize) flushBuffer();
+    if (bufferSize + length >= maxBufferSize) {
+      flushBuffer();
+      write(b, offset, length);
+    }
 
     buffer.put(b, offset, length);
     bufferSize += length;
@@ -128,6 +139,21 @@ public class BlueBufferManager implements BufferManager {
   @Override
   public void write(String s) {
     write(s.getBytes());
+  }
+
+  private void segmentedWrite(byte[] b, int offset, int length) {
+    if (b.length > maxBufferSize) {
+
+      int segs = b.length / maxBufferSize;
+      int tail = b.length % maxBufferSize;
+      for (int i = 0; i < segs; i++) {
+        write(b, (i + offset) * maxBufferSize, maxBufferSize);
+      }
+      write(b, (segs + 1) * maxBufferSize, tail);
+    }
+    else {
+      write(b, offset, length);
+    }
   }
 
   public synchronized void directWrite(String s) {
@@ -141,7 +167,7 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public int getHeight() {
-    return wrappedBuffer.getHeight();
+    return wrappedBuffer.getHeight() - 1;
   }
 
   @Override
