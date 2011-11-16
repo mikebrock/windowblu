@@ -102,6 +102,17 @@ public class BlueBufferManager implements BufferManager {
   }
 
   @Override
+  public void write(int b) {
+    if (bufferSize + 1 >= maxBufferSize) {
+      flushBuffer();
+    }
+
+    buffer.put((byte) b);
+    bufferSize++;
+    _flush();
+  }
+
+  @Override
   public synchronized void write(byte b) {
     if (bufferSize + 1 >= maxBufferSize) {
       flushBuffer();
