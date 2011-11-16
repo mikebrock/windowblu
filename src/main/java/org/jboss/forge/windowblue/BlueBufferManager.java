@@ -31,6 +31,7 @@ public class BlueBufferManager implements BufferManager {
   @Override
   public void directWriteMode() {
     bufferOnly = false;
+    flushBuffer();
   }
 
   @Override
@@ -74,7 +75,6 @@ public class BlueBufferManager implements BufferManager {
                               // offset the buffersize.
                               break;
                           }
-
                         }
                     }
                   }
@@ -89,10 +89,9 @@ public class BlueBufferManager implements BufferManager {
 
     bufferSize = 0;
     buffer.clear();
-
-    wrappedBuffer.flushBuffer();
-    wrappedBuffer.directWriteMode();
     blueBar.render();
+
+    wrappedBuffer.directWriteMode();
   }
 
   private void _flush() {

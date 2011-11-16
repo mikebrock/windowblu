@@ -18,8 +18,6 @@ public class BlueBar {
   private static final String HOME = new String(new char[]{27, '[', 'H'});
   private static final String ERASE_TO_END = new String(new char[]{27, '[', 'K'});
 
-
-  private byte[] render;
   private int width;
   private final BlueBufferManager manager;
   private Shell shell;
@@ -31,20 +29,12 @@ public class BlueBar {
     this.manager = manager;
     this.shell = shell;
     this.width = manager.getWidth();
-    this.render = new byte[width];
     loadDefaults();
   }
 
   private void loadDefaults() {
     titleBarColor = Ansi.Color.BLUE;
     textColor = Ansi.Color.BLACK;
-  }
-
-  private void _checkWidth() {
-    if (width != manager.getWidth()) {
-      width = manager.getWidth();
-      resize();
-    }
   }
 
   private void resize() {
@@ -71,53 +61,10 @@ public class BlueBar {
 
       int toPad = width - sb.length() - FORGE_NAME.length();
       manager.directWrite(pad(toPad));
-
       manager.directWrite(attr(1, 37));
       manager.directWrite(FORGE_NAME);
-
       manager.directWrite(RES_POS);
-
     }
-  }
-
-  public static String renderCols(final List<String> list, final boolean[] columns) {
-    int cols = columns.length;
-    int[] colSizes = new int[columns.length];
-
-    Iterator<String> iter = list.iterator();
-    StringBuilder buf = new StringBuilder();
-
-    String el;
-    while (iter.hasNext()) {
-      for (int i = 0; i < cols; i++) {
-        if (colSizes[i] < (el = iter.next()).length()) {
-          colSizes[i] = el.length();
-        }
-      }
-    }
-
-    iter = list.iterator();
-
-    while (iter.hasNext()) {
-      for (int i = 0; i < cols; i++) {
-        el = iter.next();
-        if (columns[i]) {
-          buf.append(pad(colSizes[i] - el.length())).append(el);
-
-          if (iter.hasNext()) {
-            buf.append(" ");
-          }
-        }
-        else {
-          buf.append(" ").append(el);
-          if (iter.hasNext()) {
-            buf.append(pad(colSizes[i] - el.length())).append(" ");
-          }
-        }
-      }
-    }
-
-    return buf.toString();
   }
 
   public static String pad(final int amount) {
@@ -128,21 +75,11 @@ public class BlueBar {
     return new String(padding);
   }
 
-  public static void main(String[] args) {
-    List<String> parts = new ArrayList<String>();
-    parts.add(new Date().toString());
-    parts.add("JBoss Forge");
-    parts.add("akdsjflkjdaslk/dsajlkfjlaksdjfdsa/");
-
-    System.out.println(renderCols(parts, new boolean[]{false, false, true}));
-
-  }
-
-  private String attr(int... code) {
+  private static String attr(int... code) {
     return new String(new char[]{27, '['}) + _attr(code) + "m";
   }
 
-  private String _attr(int... code) {
+  private static String _attr(int... code) {
     StringBuilder b = new StringBuilder();
     boolean first = true;
     for (int c : code) {
