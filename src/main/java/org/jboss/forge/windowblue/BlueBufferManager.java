@@ -185,6 +185,7 @@ public class BlueBufferManager implements BufferManager {
   }
 
   public void render() {
-    blueBar.render();
+    write(blueBar.render());
+    flushBuffer();
   }
 }

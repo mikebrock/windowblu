@@ -22,7 +22,6 @@ public class WindowBlu implements Plugin {
   private BlueBufferManager blueBufferManager;
   private boolean running = false;
 
-
   public WindowBlu() {
   }
 
@@ -49,7 +48,7 @@ public class WindowBlu implements Plugin {
       for (; ; ) {
         try {
           if (!running) return;
-          blueBufferManager.render();
+           blueBufferManager.render();
           Thread.sleep(calculateSleep());
         }
         catch (InterruptedException e) {
