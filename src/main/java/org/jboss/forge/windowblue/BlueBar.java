@@ -47,7 +47,6 @@ public class BlueBar {
       this.width = manager.getWidth();
 
       StringBuilder buf = new StringBuilder(SAVE_POS)
-              .append(SAVE_POS)
               .append(HOME)
               .append(attr(30, 44));
 

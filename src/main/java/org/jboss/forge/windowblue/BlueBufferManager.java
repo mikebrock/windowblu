@@ -36,7 +36,7 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void flushBuffer() {
-    String render = blueBar.render();
+   String render = blueBar.render();
     wrappedBuffer.write(render);
     wrappedBuffer.bufferOnlyMode();
     byte[] buf = new byte[2048];
