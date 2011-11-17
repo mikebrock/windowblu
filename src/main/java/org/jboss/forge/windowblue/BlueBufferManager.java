@@ -52,7 +52,6 @@ public class BlueBufferManager implements BufferManager {
             if (i + 20 >= buf.length) {
               buffer.position(buffer.position() - 1);
               bufferSize++;
-              i--;
               break Inner;
             }
             if (bufferSize > 0) {
@@ -80,7 +79,6 @@ public class BlueBufferManager implements BufferManager {
                         }
                     }
                   }
-
               }
             }
 
