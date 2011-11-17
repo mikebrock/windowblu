@@ -1,8 +1,9 @@
 package org.jboss.forge.windowblue;
 
-import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
-import org.jboss.forge.shell.events.*;
+import org.jboss.forge.shell.events.Shutdown;
+import org.jboss.forge.shell.integration.BufferManager;
+import org.jboss.forge.shell.integration.KeyListener;
 import org.jboss.forge.shell.plugins.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -36,7 +37,20 @@ public class WindowBlu implements Plugin {
 
     BufferManager manager = shell.getBufferManager();
     blueBufferManager = new BlueBufferManager(manager, shell);
+    
     shell.registerBufferManager(blueBufferManager);
+    shell.registerKeyListener(new KeyListener() {
+      @Override
+      public boolean keyPress(int key) {
+        switch (key) {
+          case 1: // CTRL-A;
+            System.out.println("Back Buffer");
+            break;
+        }
+        return false;
+      }
+    });
+    
     running = true;
     updateThread.setPriority(Thread.MIN_PRIORITY);
     updateThread.start();

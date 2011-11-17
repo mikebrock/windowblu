@@ -1,8 +1,9 @@
 package org.jboss.forge.windowblue;
 
-import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
+import org.jboss.forge.shell.integration.BufferManager;
 
+import java.io.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -17,10 +18,18 @@ public class BlueBufferManager implements BufferManager {
   private int bufferSize = 0;
   private int maxBufferSize = 1024 * 10;
 
+  private File backBufferDir = new File(System.getProperty("user.home") + "/.forge/windowblue/");
+  private File backBuffer = new File(backBufferDir.getAbsolutePath() + "/buffer.log");
+
+  private OutputStream bufferOut;
+  private RandomAccessFile bufferIn;
+
   public BlueBufferManager(BufferManager wrappedBuffer, Shell shell) {
     this.wrappedBuffer = wrappedBuffer;
     this.buffer = ByteBuffer.allocateDirect(maxBufferSize);
     this.blueBar = new BlueBar(this, shell);
+
+    initBackBufferLog();
   }
 
   @Override
@@ -36,8 +45,8 @@ public class BlueBufferManager implements BufferManager {
 
   @Override
   public synchronized void flushBuffer() {
-   String render = blueBar.render();
-    wrappedBuffer.write(render);
+    String render = blueBar.render();
+    _write(render);
     wrappedBuffer.bufferOnlyMode();
     byte[] buf = new byte[2048];
     buffer.rewind();
@@ -84,16 +93,48 @@ public class BlueBufferManager implements BufferManager {
 
         }
       }
-      wrappedBuffer.write(buf, 0, i);
+      _write(buf, 0, i);
     }
     while (bufferSize > 0);
 
     bufferSize = 0;
     buffer.clear();
 
-    wrappedBuffer.write(render);
+    _write(render);
     wrappedBuffer.directWriteMode();
   }
+
+  private void _write(byte[] b, int offset, int length) {
+    try {
+      bufferOut.write(b, offset, length);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    wrappedBuffer.write(b, offset, length);
+  }
+
+  private void _write(String out) {
+    try {
+      bufferOut.write(out.getBytes());
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    wrappedBuffer.write(out);
+  }
+
+
+  private void _directWrite(String out) {
+    try {
+      bufferOut.write(out.getBytes());
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    wrappedBuffer.directWrite(out);
+  }
+
 
   private void _flush() {
     if (!bufferOnly) flushBuffer();
@@ -166,7 +207,8 @@ public class BlueBufferManager implements BufferManager {
   }
 
   public synchronized void directWrite(String s) {
-    wrappedBuffer.write(s);
+
+    _directWrite(s);
   }
 
   @Override
@@ -185,7 +227,21 @@ public class BlueBufferManager implements BufferManager {
   }
 
   public void render() {
-    write(blueBar.render());
+    _write(blueBar.render());
     flushBuffer();
+  }
+
+  private void initBackBufferLog() {
+    if (!backBufferDir.exists()) {
+      backBufferDir.mkdirs();
+    }
+
+    try {
+      bufferOut = new BufferedOutputStream(new FileOutputStream(backBuffer, true));
+      bufferIn = new RandomAccessFile(backBuffer, "r");
+    }
+    catch (Exception e) {
+      throw new RuntimeException("could not initialize buffer", e);
+    }
   }
 }
