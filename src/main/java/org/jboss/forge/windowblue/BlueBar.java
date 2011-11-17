@@ -1,14 +1,10 @@
 package org.jboss.forge.windowblue;
 
 import org.fusesource.jansi.Ansi;
-import org.jboss.forge.shell.BufferManager;
 import org.jboss.forge.shell.Shell;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Mike Brock
