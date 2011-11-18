@@ -34,7 +34,6 @@ public class BlueBar {
     textColor = Ansi.Color.BLACK;
   }
 
-
   private static final String FORGE_NAME = "Forge " + Shell.class.getPackage().getImplementationVersion();
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d yyyy kk:mm");
 

@@ -276,6 +276,8 @@ public class BlueBufferManager implements BufferManager {
       bufferOut.flush();
 
       long topOfPage = countBytesToCR(true, getHeight());
+      if (topOfPage == -1) topOfPage = 0;
+
       bufferIn.seek(topOfPage);
       long toByte = countBytesToCR(true, getHeight());
 

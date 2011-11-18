@@ -46,7 +46,7 @@ public class WindowBlu implements Plugin {
       public boolean keyPress(int key) {
         if (!armed) {
           switch (key) {
-            case 1: // CTRL-A;
+            case 1: // intercept CTRL-A;
               armed = true;
               while (armed) {
                 switch (shell.scan()) {
