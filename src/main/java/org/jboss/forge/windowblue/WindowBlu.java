@@ -32,25 +32,44 @@ public class WindowBlu implements Plugin {
     init();
   }
 
+  private boolean armed = false;
+
   public void init() {
     shell.clear();
 
     BufferManager manager = shell.getBufferManager();
     blueBufferManager = new BlueBufferManager(manager, shell);
-    
+
     shell.registerBufferManager(blueBufferManager);
     shell.registerKeyListener(new KeyListener() {
       @Override
       public boolean keyPress(int key) {
-        switch (key) {
-          case 1: // CTRL-A;
-            System.out.println("Back Buffer");
-            break;
+        if (!armed) {
+          switch (key) {
+            case 1: // CTRL-A;
+              armed = true;
+              while (armed) {
+                switch (shell.scan()) {
+                  case 'u':
+                    blueBufferManager.pageUp();
+                    break;
+                  case 'd':
+                    blueBufferManager.pageDown();
+                    break;
+                  case 'x':
+                    armed = false;
+                    blueBufferManager.resetToNormal();
+                    break;
+                }
+              }
+          }
         }
+
         return false;
       }
     });
-    
+
+
     running = true;
     updateThread.setPriority(Thread.MIN_PRIORITY);
     updateThread.start();
@@ -62,7 +81,7 @@ public class WindowBlu implements Plugin {
       for (; ; ) {
         try {
           if (!running) return;
-           blueBufferManager.render();
+          blueBufferManager.render();
           Thread.sleep(calculateSleep());
         }
         catch (InterruptedException e) {
@@ -76,21 +95,22 @@ public class WindowBlu implements Plugin {
   };
 
   private boolean initial = true;
+
   private long calculateSleep() {
     if (initial) {
       initial = false;
       Calendar c = Calendar.getInstance();
-      c.add(Calendar.MINUTE, 1);      
+      c.add(Calendar.MINUTE, 1);
       c.set(Calendar.SECOND, 0);
       c.set(Calendar.MILLISECOND, 0);
-      
+
       return c.getTimeInMillis() - System.currentTimeMillis();
     }
     else {
       return 60000;
     }
   }
-  
+
 
   public void update(@Observes WindowBluUpdate update) {
     blueBufferManager.render();
